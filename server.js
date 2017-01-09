@@ -22,13 +22,14 @@ var app = {
   slapp,
   server,
   kv: BeepBoopPersist({ provider: config.persist_provider }),
-  chronos: Chronos({ 
-    beepboop_token: config.beepboop_token, 
+  chronos: Chronos({
+    beepboop_token: config.beepboop_token,
     beepboop_project_id: config.beepboop_project_id
   })
 }
 
 require('./src/flows')(app)
+
 server.get('/', function (req, res) {
   res.send('Hello')
 })
