@@ -21,7 +21,7 @@ var server = slapp.attachToExpress(express())
 var app = {
   slapp,
   server,
-  kv: BeepBoopPersist({ provider: config.persist_provider }),
+  kv: BeepBoopPersist({ provider: config.persist_provider, url: config.base_url }),
   chronos: Chronos({
     beepboop_token: config.beepboop_token,
     beepboop_project_id: config.beepboop_project_id
