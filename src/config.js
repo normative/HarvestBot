@@ -21,6 +21,11 @@ let config = module.exports = {
   beepboop_project_id: process.env.BEEPBOOP_PROJECT_ID,
   beepboop_token: process.env.BEEPBOOP_TOKEN,
 
+  // Harvest config
+  harvest_api_base_url: process.env.HARVEST_API_BASE_URL,
+  harvest_admin_username: process.env.HARVEST_ADMIN_USERNAME,
+  harvest_admin_password: process.env.HARVEST_ADMIN_PASSWORD,
+
   validate: () => {
     let required = ['beepboop_token']
 
