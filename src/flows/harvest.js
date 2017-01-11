@@ -115,7 +115,7 @@ module.exports = (app) => {
             { projects, selectedProject, selectedProjectId, tasks })
 
         msg.respond({
-            text: `For project \"${selectedProject.name}\", which task are you logging hours for?`,
+            text: `For project *\"${selectedProject.name}\"*, which task are you logging hours for?`,
             attachments: [
                 {
                     text: '',
@@ -145,7 +145,7 @@ module.exports = (app) => {
         const enrichedState = Object.assign({},
             state,
             { selectedTaskId, selectedTask })
-        msg.say(`For today, How many hours would you like to log for ${selectedTask.name} on ${selectedProject.name}?`)
+        msg.say(`For today, How many hours would you like to log for ${selectedTask.name} on *${selectedProject.name}*?`)
             .route(handleHourInput, enrichedState)
     })
 
@@ -172,7 +172,7 @@ module.exports = (app) => {
                 const projectButtons = buttonsForProjects(state.projects)
                 msg
                     .say({
-                        text: `:thumbsup_all: You have successfully logged ${hours} hours on ${state.selectedProject.name} :pineappletime: \n` +
+                        text: `:thumbsup_all: You have successfully logged *${hours}* hours on *${state.selectedProject.name}* :pineappletime: \n` +
                         'Would you like to log more hours on another project?\nYou\'re currently assigned to these projects:',
                         attachments: [
                             {
