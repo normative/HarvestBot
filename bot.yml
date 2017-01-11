@@ -12,7 +12,19 @@ slackscopes:
   - commands
   - reactions:write
 config: 
-  - name: AWS_ACCESS_KEY
-    friendly_name: AWS Access Key
-    info: Amazon Web Services access key
+  - name: SLACK_VERIFY_TOKEN
+    friendly_name: SLACK VERIFY TOKEN
+    info: Slack Token
+    type: secret
+  - name: HARVEST_ADMIN_USERNAME
+    friendly_name: HARVEST ADMIN USERNAME
+    info: Harvest Admin Email
+    type: secret
+  - name: HARVEST_ADMIN_PASSWORD
+    friendly_name: HARVEST PASSWORD
+    info: Harvest Password
+    type: secret
+  - name: HARVEST_API_BASE_URL
+    friendly_name: HARVEST URL
+    info: Harvest URL
     type: secret
