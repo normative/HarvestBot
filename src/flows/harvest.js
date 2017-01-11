@@ -96,7 +96,7 @@ module.exports = (app) => {
         const tasks = selectedProject.tasks
 
         if(tasks.length === 0) {
-            msg.say('There are no tasks for this project.  Please contact office admin.')
+            msg.say('There are no tasks for this project. Please contact office admin.')
             return
         }
 
@@ -189,7 +189,7 @@ module.exports = (app) => {
             })
     })
     slapp.message('.*', ['direct_message'], (msg, text) => {
-        msg.say('Hello, I am Harvest Bot, I can help you easily log hours with Havest. Type "log" to at any time to start logging hours.')
+        msg.say("Hello, I'm Harvest Bot, I can help you easily log hours with Havest. Type 'log' to at any time to start logging hours.")
     })
 
     return {}
@@ -305,6 +305,12 @@ function buttonsForProjects(projects) {
             type: 'button',
             value: project.id,
             style: 'default',
+        }, {
+            name: 'Cancel',
+            text: 'Cancel',
+            type: 'cancel',
+            value: 'cancel',
+            style: 'danger',
         }
     })
 }
