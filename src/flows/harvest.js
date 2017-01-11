@@ -58,9 +58,9 @@ module.exports = (app) => {
                             text: '',
                             callback_id: 'select_project',
                             actions: [
-                                {
+                                
                                     projectButtons
-                                },
+                                ,
                                 {
                                     name: 'cancel',
                                     text: 'cancel',
