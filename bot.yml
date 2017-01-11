@@ -13,6 +13,6 @@ slackscopes:
   - reactions:write
 config: 
   - name: AWS_ACCESS_KEY
- 	friendly_name: AWS Access Key
- 	info: Amazon Web Services access key
- 	type: secret
+    friendly_name: AWS Access Key
+    info: Amazon Web Services access key
+    type: secret
