@@ -63,11 +63,11 @@ module.exports = (app) => {
 
             })
             .catch((err) => {
-                console.log(typeof err)
                 if(typeof err === 'string') {
                     msg.say(err)
                 }
                 else {
+                    console.log(err)
                     msg.say('Uh oh, something went wrong.')
                 }
             })
