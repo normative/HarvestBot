@@ -5,6 +5,7 @@ const Slack = require('slack-node')
 const btoa = require('btoa')
 const config = require('../config').validate()
 const baseRequest = require('request')
+const _ = require('lodash')
 
 const harvestAPI = baseRequest.defaults({
     headers: {
@@ -87,7 +88,8 @@ module.exports = (app) => {
 
         console.log(`Selected projectID: ${selectedProjectId}`)
 
-        const selectedProject = projects.find((project) => {
+
+        const selectedProject = _.find(projects,(project) => {
             return project.id == selectedProjectId
         })
 
@@ -133,9 +135,11 @@ module.exports = (app) => {
         }
 
         const selectedTaskId = msg.body.actions[0].value
-        const selectedTask = tasks.find((task) => {
+
+        const selectedTask =  _.find(tasks,(task) => {
             return task.id == selectedTaskId
         })
+
         console.log(`Selected task ID: ${selectedTaskId}`)
 
         const enrichedState = Object.assign({},
@@ -252,7 +256,8 @@ function getAllHarvestUsers() {
 function getHarvestUserIdWithEmail(emailAddress) {
     return getAllHarvestUsers()
         .then((allUsers) => {
-            const userWithMatchingEmail = allUsers.find((element) => {
+
+            const userWithMatchingEmail = _.find(allUsers,(element) => {
                 return element.user.email === emailAddress
             })
 
