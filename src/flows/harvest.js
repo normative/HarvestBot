@@ -24,6 +24,11 @@ const handleHourInput = 'harvest:handleHourInput'
 module.exports = (app) => {
     let slapp = app.slapp
 
+    slapp.message('.*', ['direct_message'], (msg, text) =>{
+        msg.say({
+            text: 'Hello, I am Harvest Bot, I can help you log hours on Harvest. To log hours respond to this message with "log"'
+        })
+    })
 
     slapp.message('log', ['direct_message'], (msg, text) => {
 
