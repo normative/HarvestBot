@@ -188,8 +188,13 @@ module.exports = (app) => {
                 console.log('Error')
             })
     })
+    slapp.message('.*', ['direct_message'], (msg, text) => {
+        msg.say('Hello, I am Harvest Bot, I can help you easily log hours with Havest. Type "log" to at any time to start logging hours.')
+    })
+
     return {}
 }
+
 
 function getSlackUserInfo(userId, authToken) {
     const slack = new Slack(authToken)
