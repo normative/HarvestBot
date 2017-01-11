@@ -256,9 +256,10 @@ function getAllHarvestUsers() {
 function getHarvestUserIdWithEmail(emailAddress) {
     return getAllHarvestUsers()
         .then((allUsers) => {
-
+            console.log(allUsers)
             const userWithMatchingEmail = _.find(allUsers,(element) => {
                 return element.user.email === emailAddress
+
             })
 
             return userWithMatchingEmail && userWithMatchingEmail.user.id
