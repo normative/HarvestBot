@@ -107,6 +107,12 @@ module.exports = (app) => {
                 type: 'button',
                 value: task.id,
                 style: 'default',
+            }, {
+                name: 'cancel',
+                text: Cancel,
+                type: 'button',
+                value: 1,
+                style: 'default',
             }
         })
 
