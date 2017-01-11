@@ -25,7 +25,7 @@ module.exports = (app) => {
     let slapp = app.slapp
 
 
-    slapp.message('.*', ['direct_message'], (msg, text) => {
+    slapp.message('log', ['direct_message'], (msg, text) => {
 
         const slackUserId = msg.body.event.user
         const scope = {}
