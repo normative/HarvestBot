@@ -57,7 +57,14 @@ module.exports = (app) => {
                         {
                             text: '',
                             callback_id: 'select_project',
-                            actions: projectButtons,
+                            actions: [projectButtons, {
+                                name: 'cancel',
+                                text: 'cancel',
+                                type: 'button',
+                                value: 'cancel',
+                                style: 'danger',
+                            }
+                            ]
                         }
                     ]})
                     .route(handleSelectProject, { projects: scope.projects, harvestUserId: scope.harvestUserId })
@@ -305,12 +312,6 @@ function buttonsForProjects(projects) {
             type: 'button',
             value: project.id,
             style: 'default',
-        }, {
-            name: 'Cancel',
-            text: 'Cancel',
-            type: 'cancel',
-            value: 'cancel',
-            style: 'danger',
         }
     })
 }
