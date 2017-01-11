@@ -67,7 +67,7 @@ module.exports = (app) => {
                                     type: 'button',
                                     value: 'cancel',
                                     style: 'danger',
-                                }
+
                             }
                             ]
                         }
