@@ -50,53 +50,11 @@ module.exports = (app) => {
                 scope.projects = projects
 
                 const projectButtons = buttonsForProjects(projects)
-                const cancelButton = {
-                    name: 'cancel',
-                    text: 'Cancel',
-                    type: 'button',
-                    value: 'cancel',
-                    style: 'danger',
-                }
-                    //split array to groups of 4
 
-                const splitButtons = [];
-                let j = 0;
-                let newButtonGroup = [];
-                for (let i = 0; i < projectButtons.length; i++) {
-                    newButtonGroup.push(projectButtons[i])
-                    if ( (j===3) || (i === projectButtons.length-1)) {
-                        splitButtons.push(newButtonGroup);
-                        newButtonGroup = [];
-                        j = 0;
-                    }
-                    j++;
-                }
-
-                const attachments = [];
-                for (let i = 0; i < splitButtons.length; i++) {
-                    const action = {};
-                    let buttons = splitButtons[i];
-                    if (i === splitButtons.length - 1) {
-                        buttons.push(cancelButton);
-                    }
-                    action.text = '';
-                    action.callback_id = 'select_project';
-                    action.color = '#3AA3E3'
-                    if (i === 0 ) {
-                        action.text = 'You\'re currently assigned to these projects:';
-                    }
-                    action.actions = buttons;
-                    console.log(action.actions)
-                    attachments.push(action);
-
-
-                }
-
-                console.log(attachments);
 
                 msg.say({
-                    text: 'Log hours for which project?\nYou\'re currently assigned to these projects:',
-                    attachments: attachments
+                    text: 'Log hours for which project?',
+                    attachments: splitProjectbuttons(projectButtons)
                 })
                     .route(handleSelectProject, {projects: scope.projects, harvestUserId: scope.harvestUserId})
 
@@ -164,6 +122,18 @@ module.exports = (app) => {
                     text: '',
                     callback_id: 'select_task',
                     actions: taskButtons,
+                }, {
+                    text: '',
+                    callback_id: 'select_task',
+                    actions: [
+                        {
+                            name: 'cancel',
+                            text: 'Cancel',
+                            type: 'button',
+                            value: 'Cancel',
+                            style: 'danger',
+                        }
+                    ]
                 }
             ]})
             .route(handleSelectTask, enrichedState)
@@ -174,6 +144,11 @@ module.exports = (app) => {
         const tasks = state.tasks
         if(msg.type !== 'action') {
             msg.say('You must select a task').route(handleSelectTask, state)
+            return
+        }
+
+        if(msg.body.actions[0].value === 'cancel'){
+            msg.say(returnRandomGoodByeString())
             return
         }
 
@@ -217,13 +192,9 @@ module.exports = (app) => {
                     .say({
                         text: `:thumbsup_all: You have successfully logged *${hours}* hours on *${state.selectedProject.name}* :pineappletime: \n` +
                         'Would you like to log more hours on another project?\nYou\'re currently assigned to these projects:',
-                        attachments: [
-                            {
-                                text: '',
-                                callback_id: 'select_project',
-                                actions: projectButtons,
-                            }
-                        ]})
+                        attachments: splitProjectbuttons(projectButtons)
+
+                        })
                     .route(handleSelectProject, state)
 
             })
@@ -355,6 +326,49 @@ function logHoursToHarvest(userId, projectId, taskId, hours, date) {
             resolve(body)
         })
     })
+}
+
+
+function splitProjectbuttons(projectButtons) {
+    const splitButtons = [];
+    let j = 0;
+    let newButtonGroup = [];
+    for (let i = 0; i < projectButtons.length; i++) {
+        newButtonGroup.push(projectButtons[i])
+        if ( (j===3) || (i === projectButtons.length-1)) {
+            splitButtons.push(newButtonGroup);
+            newButtonGroup = [];
+            j = 0;
+        }
+        j++;
+    }
+
+    const attachments = [];
+    for (let i = 0; i < splitButtons.length; i++) {
+        const action = {};
+        const cancelButton = {
+            name: 'cancel',
+            text: 'Cancel',
+            type: 'button',
+            value: 'cancel',
+            style: 'danger',
+        }
+        let buttons = splitButtons[i];
+        if (i === splitButtons.length - 1) {
+            buttons.push(cancelButton);
+        }
+        action.text = '';
+        action.callback_id = 'select_project';
+        action.color = '#0f54e3'
+        if (i === 0 ) {
+            action.text = 'You\'re currently assigned to these projects:';
+        }
+        action.actions = buttons;
+        console.log(action.actions)
+        attachments.push(action);
+
+    }
+    return attachments
 }
 
 
