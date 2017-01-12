@@ -130,7 +130,7 @@ module.exports = (app) => {
                             name: 'cancel',
                             text: 'Cancel',
                             type: 'button',
-                            value: 'Cancel',
+                            value: 'cancel',
                             style: 'danger',
                         }
                     ]
@@ -142,6 +142,7 @@ module.exports = (app) => {
     slapp.route(handleSelectTask, (msg, state) => {
         const selectedProject = state.selectedProject
         const tasks = state.tasks
+
         if(msg.type !== 'action') {
             msg.say('You must select a task').route(handleSelectTask, state)
             return
