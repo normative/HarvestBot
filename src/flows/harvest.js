@@ -125,7 +125,7 @@ module.exports = (app) => {
     chronos.list((err, response) => {
       console.log(response)
     })
-  }
+  })
 
   slapp.event('scheduled_publish', (msg) => {
     // let poll = Poll.create(msg.body.event.payload)
