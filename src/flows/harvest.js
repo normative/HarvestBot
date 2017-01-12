@@ -121,6 +121,12 @@ module.exports = (app) => {
     }, callback)
   })
 
+  slapp.message('delete', ['direct_message'], (msg, text) => {
+    chronos.list((err, response) => {
+      console.log(response)
+    })
+  }
+
   slapp.event('scheduled_publish', (msg) => {
     // let poll = Poll.create(msg.body.event.payload)
     // poll.parent_id = poll.id
