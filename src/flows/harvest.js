@@ -101,7 +101,7 @@ module.exports = (app) => {
             return
         }
 
-
+        const taskButtons = buttonsForTasks(tasks)
 
         const enrichedState = Object.assign({},
             state,
@@ -109,8 +109,7 @@ module.exports = (app) => {
 
         msg.respond({
             text: `For project *\"${selectedProject.name}\"*, which task are you logging hours for?`,
-            attachments: splitTaskButtons(tasks)
-        })
+            attachments: splitTaskButtons(taskButtons)})
             .route(handleSelectTask, enrichedState)
     })
 
@@ -167,7 +166,7 @@ module.exports = (app) => {
                 msg
                     .say({
                         text: `:thumbsup_all: You have successfully logged *${hours}* hours on *${state.selectedProject.name}* :pineappletime: \n` +
-                        'Would you like to log more hours on another project?\nYou\'re currently assigned to these projects:',
+                        'Would you like to log more hours on another project?',
                         attachments: splitProjectbuttons(projectButtons)
 
                         })
@@ -192,7 +191,7 @@ module.exports = (app) => {
         msg.say("Please keep profanity to a minimum!")
     })
     slapp.message('.*', ['direct_message'], (msg, text) => {
-        msg.say("Hello, I'm Harvest Bot, I can help you easily log hours with Havest. Type `log` to at any time to start logging hours.")
+        msg.say("Hello, I'm Harvest Bot, I can help you easily log hours with Havest. Type `log` at any time to start logging hours.")
     })
 
     return {}
@@ -200,7 +199,7 @@ module.exports = (app) => {
 
 function returnRandomGoodByeString() {
     if (Math.random() < 1.0) {
-        return ([":wave:", "If you need me, I'll just be here dancing :pineappletime:", "See you later!"])
+        return ([":wave:", "If you need me, I'll just be here dancing :pineappletime:", "See you later! :floppy-watermelon:", ])
     }
 }
 
@@ -334,9 +333,9 @@ function splitTaskButtons(tasks) {
         }
         action.text = '';
         action.callback_id = 'select_task';
-        action.color = '#0f54e3'
+        action.color = '#2e6be3'
         if (i === 0 ) {
-            action.text = 'You\'re currently assigned to these projects:';
+            action.text = '';
         }
         action.actions = buttons;
         console.log(action.actions)
@@ -376,7 +375,7 @@ function splitProjectbuttons(projectButtons) {
         }
         action.text = '';
         action.callback_id = 'select_project';
-        action.color = '#0f54e3'
+        action.color = '#2e6be3'
         if (i === 0 ) {
             action.text = 'You\'re currently assigned to these projects:';
         }
@@ -388,6 +387,17 @@ function splitProjectbuttons(projectButtons) {
     return attachments
 }
 
+function buttonsForTasks(tasks) {
+    return tasks.map((task) => {
+        return {
+            name: 'taskAnswer',
+            text: task.name,
+            type: 'button',
+            value: task.id,
+            style: 'default',
+        }
+    })
+}
 
 function buttonsForProjects(projects) {
     return projects.map((project) => {
