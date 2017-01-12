@@ -50,29 +50,55 @@ module.exports = (app) => {
                 scope.projects = projects
 
                 const projectButtons = buttonsForProjects(projects)
+                const cancelButton = {
+                    name: 'cancel',
+                    text: 'Cancel',
+                    type: 'button',
+                    value: 'cancel',
+                    style: 'danger',
+                }
+                    //split array to groups of 4
+
+                const splitButtons = [];
+                let j = 0;
+                let newButtonGroup = [];
+                for (let i = 0; i < projectButtons.length; i++) {
+                    newButtonGroup.push(projectButtons[i])
+                    if ( (j===3) || (i === projectButtons.length-1)) {
+                        splitButtons.push(newButtonGroup);
+                        newButtonGroup = [];
+                        j = 0;
+                    }
+                    j++;
+                }
+
+                const attachments = [];
+                for (let i = 0; i < splitButtons.length; i++) {
+                    const action = {};
+                    let buttons = splitButtons[i];
+                    if (i === splitButtons.length - 1) {
+                        buttons.push(cancelButton);
+                    }
+                    action.text = '';
+                    action.callback_id = 'select_project';
+                    action.color = '#3AA3E3'
+                    if (i === 0 ) {
+                        action.text = 'You\'re currently assigned to these projects:';
+                    }
+                    action.actions = buttons;
+                    console.log(action.actions)
+                    attachments.push(action);
+
+
+                }
+
+                console.log(attachments);
 
                 msg.say({
                     text: 'Log hours for which project?\nYou\'re currently assigned to these projects:',
-                    attachments: [
-                        {
-                            text: '',
-                            callback_id: 'select_project',
-                            actions: [
-                                
-                                    projectButtons
-                                ,
-                                {
-                                    name: 'cancel',
-                                    text: 'cancel',
-                                    type: 'button',
-                                    value: 'cancel',
-                                    style: 'danger',
-
-                            }
-                            ]
-                        }
-                    ]})
-                    .route(handleSelectProject, { projects: scope.projects, harvestUserId: scope.harvestUserId })
+                    attachments: attachments
+                })
+                    .route(handleSelectProject, {projects: scope.projects, harvestUserId: scope.harvestUserId})
 
             })
             .catch((err) => {
@@ -93,6 +119,11 @@ module.exports = (app) => {
 
         if(msg.type !== 'action') {
             msg.say('You must select a project').route(handleSelectProject, state)
+            return
+        }
+
+        if(msg.body.actions[0].value === 'cancel'){
+            msg.say(returnRandomGoodByeString())
             return
         }
 
@@ -200,13 +231,31 @@ module.exports = (app) => {
                 console.log('Error')
             })
     })
+    slapp.message('.*', ['mention', 'direct_mention'], (msg) => {
+        msg.say('Hello, how are you?')
+    })
+    slapp.message('hey', ['direct_message'], (msg, text) => {
+        msg.say('Hello, how are you?')
+    })
+
+    slapp.message('help', ['direct_message'], (msg, text) => {
+        msg.say('I can help you log hours on harvest, type `log` to start logging your hours.')
+    })
+    slapp.message('fuck', ['direct_message'], (msg, text) => {
+        msg.say("Please keep profanity to a minimum!")
+    })
     slapp.message('.*', ['direct_message'], (msg, text) => {
-        msg.say("Hello, I'm Harvest Bot, I can help you easily log hours with Havest. Type 'log' to at any time to start logging hours.")
+        msg.say("Hello, I'm Harvest Bot, I can help you easily log hours with Havest. Type `log` to at any time to start logging hours.")
     })
 
     return {}
 }
 
+function returnRandomGoodByeString() {
+    if (Math.random() < 1.0) {
+        return ([":wave:", "If you need me, I'll just be here dancing :pineappletime:", "See you later!"])
+    }
+}
 
 function getSlackUserInfo(userId, authToken) {
     const slack = new Slack(authToken)
