@@ -101,15 +101,7 @@ module.exports = (app) => {
             return
         }
 
-        const taskButtons = tasks.map((task) => {
-            return {
-                name: 'taskAnswer',
-                text: task.name,
-                type: 'button',
-                value: task.id,
-                style: 'default',
-            }
-        })
+
 
         const enrichedState = Object.assign({},
             state,
@@ -117,25 +109,8 @@ module.exports = (app) => {
 
         msg.respond({
             text: `For project *\"${selectedProject.name}\"*, which task are you logging hours for?`,
-            attachments: [
-                {
-                    text: '',
-                    callback_id: 'select_task',
-                    actions: taskButtons,
-                }, {
-                    text: '',
-                    callback_id: 'select_task',
-                    actions: [
-                        {
-                            name: 'cancel',
-                            text: 'Cancel',
-                            type: 'button',
-                            value: 'cancel',
-                            style: 'danger',
-                        }
-                    ]
-                }
-            ]})
+            attachments: splitTaskButtons(tasks)
+        })
             .route(handleSelectTask, enrichedState)
     })
 
@@ -329,6 +304,47 @@ function logHoursToHarvest(userId, projectId, taskId, hours, date) {
     })
 }
 
+function splitTaskButtons(tasks) {
+    const splitButtons = [];
+    let j = 0;
+    let newButtonGroup = [];
+    for (let i = 0; i < tasks.length; i++) {
+        newButtonGroup.push(tasks[i])
+        if ( (j===3) || (i === tasks.length-1)) {
+            splitButtons.push(newButtonGroup);
+            newButtonGroup = [];
+            j = 0;
+        }
+        j++;
+    }
+
+    const attachments = [];
+    for (let i = 0; i < splitButtons.length; i++) {
+        const action = {};
+        const cancelButton = {
+            name: 'cancel',
+            text: 'Cancel',
+            type: 'button',
+            value: 'cancel',
+            style: 'danger',
+        }
+        let buttons = splitButtons[i];
+        if (i === splitButtons.length - 1) {
+            buttons.push(cancelButton);
+        }
+        action.text = '';
+        action.callback_id = 'select_task';
+        action.color = '#0f54e3'
+        if (i === 0 ) {
+            action.text = 'You\'re currently assigned to these projects:';
+        }
+        action.actions = buttons;
+        console.log(action.actions)
+        attachments.push(action);
+
+    }
+    return attachments
+}
 
 function splitProjectbuttons(projectButtons) {
     const splitButtons = [];
