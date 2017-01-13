@@ -51,6 +51,10 @@ module.exports = (app) => {
 
                 const projectButtons = buttonsForProjects(projects)
 
+                if (projects.length === 0){
+                  msg.say ('You are not assigned to any projects, please contact office admin.')
+                    return
+                }
 
                 msg.say({
                     text: 'Log hours for which project?',
