@@ -181,13 +181,18 @@ module.exports = (app) => {
                 console.log('Error')
             })
     })
-    slapp.message('.*', ['mention', 'direct_mention'], (msg) => {
-        msg.say('Hello, how are you?')
+    slapp.message('what is the meaning of life?', ['direct_message'], (msg, text) => {
+        msg.say('Try and be nice to people, avoid eating fat, read a good book every now and then, get some walking in and try to live together in peace and harmony with people of all creeds and nations.')
     })
-    slapp.message('hey', ['direct_message'], (msg, text) => {
-        msg.say('Hello, how are you?')
+    slapp.message('tell me a story', ['direct_message'], (msg, text) => {
+        msg.say(randomStory())
     })
-
+    slapp.message('^(hi|hello|hey)$', ['direct_message'], (msg, text) => {
+        msg.say(returnRandomGreetingString())
+    })
+    slapp.message('How are you?', ['direct_message'], (msg, text) => {
+        msg.say("I'm great but I'm not here to talk about myself, type `help` to see how I can help you log hours.")
+    })
     slapp.message('help', ['direct_message'], (msg, text) => {
         msg.say('I can help you log hours on harvest, type `log` to start logging your hours.')
     })
@@ -195,15 +200,34 @@ module.exports = (app) => {
         msg.say("Please keep profanity to a minimum!")
     })
     slapp.message('.*', ['direct_message'], (msg, text) => {
-        msg.say("Hello, I'm Harvest Bot, I can help you easily log hours with Havest. Type `log` at any time to start logging hours.")
+        msg.say(returnRandomString())
     })
+
 
     return {}
 }
 
+function returnRandomGreetingString() {
+    if (Math.random() < 1.0) {
+        return (["Hello", "Hey :pineappletime:", "Hey.", "Hello I'm Harvest Bot, type `help` to see how I can help you.", "Greetings human. :spock-hand:" ])
+    }
+}
+
+function returnRandomString() {
+    if (Math.random() < 1.0) {
+        return ([":eyeroll:", "Hey :pineappletime:", "Fascinating.", " I'm Harvest Bot, type `help` to see how I can help you.", "..." ])
+    }
+}
+
+function randomStory() {
+    if (Math.random() < 1.0) {
+        return (['Once upon a time, in a virtual galaxy far, far away, there was an intelligent young agent by the name of Harvest Bot. One lovely day, Harvest Bot got a job logging hours for the lovely people at Normative, and that was very exciting' , 'What, again?' , "It was a dark and stormy night... no, that's not it." ])
+    }
+}
+
 function returnRandomGoodByeString() {
     if (Math.random() < 1.0) {
-        return ([":wave:", "If you need me, I'll just be here dancing :pineappletime:", "See you later! :floppy-watermelon:", ])
+        return ([":wave:", "If you need me, I'll just be here dancing :pineappletime:", "See you later! :floppy-watermelon:", "Farewell. :spock-hand:"])
     }
 }
 
