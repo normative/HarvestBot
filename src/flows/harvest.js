@@ -27,6 +27,8 @@ module.exports = (app) => {
 
     slapp.message('log', ['direct_message'], (msg, text) => {
 
+        msg.say('_Gathering harvest info..._')
+
         const slackUserId = msg.body.event.user
         const scope = {}
 
@@ -57,10 +59,10 @@ module.exports = (app) => {
                 }
 
                 msg.say({
-                    text: 'Log hours for which project?',
+                    text: 'Cool. Let\'s start with a project:',
                     attachments: splitProjectbuttons(projectButtons)
                 })
-                    .route(handleSelectProject, {projects: scope.projects, harvestUserId: scope.harvestUserId})
+                    .route(handleSelectProject, {projects: scope.projects, harvestUserId: scope.harvestUserId}, 60)
 
             })
             .catch((err) => {
@@ -80,7 +82,10 @@ module.exports = (app) => {
         const projects = state.projects
 
         if(msg.type !== 'action') {
-            msg.say('You must select a project').route(handleSelectProject, state)
+            msg.say({
+                text: 'You need to select a project, or cancel.',
+                attachments: cancelButton()
+            }).route(handleSelectProject, state, 60)
             return
         }
 
@@ -114,7 +119,7 @@ module.exports = (app) => {
         msg.respond({
             text: `For project *\"${selectedProject.name}\"*, which task are you logging hours for?`,
             attachments: splitTaskButtons(taskButtons)})
-            .route(handleSelectTask, enrichedState)
+            .route(handleSelectTask, enrichedState, 60)
     })
 
     slapp.route(handleSelectTask, (msg, state) => {
@@ -122,7 +127,10 @@ module.exports = (app) => {
         const tasks = state.tasks
 
         if(msg.type !== 'action') {
-            msg.say('You must select a task').route(handleSelectTask, state)
+            msg.say({
+                text: 'You need to select a task, or cancel.',
+                attachments: cancelButton()
+            }).route(handleSelectProject, state, 60)
             return
         }
 
@@ -143,21 +151,21 @@ module.exports = (app) => {
             state,
             { selectedTaskId, selectedTask })
         msg.say(`For today, How many hours would you like to log for ${selectedTask.name} on *${selectedProject.name}*?`)
-            .route(handleHourInput, enrichedState)
+            .route(handleHourInput, enrichedState, 60)
     })
 
     slapp.route(handleHourInput, (msg, state) => {
         const hours = parseFloat(msg.body.event.text)
         if (!hours) {
-            msg.say('Please enter a valid numeric character. (i.e 6, 6.5)').route(handleHourInput, state)
+            msg.say('Please enter a valid numeric character. (i.e 6, 6.5)').route(handleHourInput, state, 60)
             return
         }
         else if (hours <= 0) {
-            msg.say('You must enter more than 0 hours').route(handleHourInput, state)
+            msg.say('You must enter more than 0 hours').route(handleHourInput, state, 60)
             return
         }
         else if (hours > 24) {
-            msg.say('You can\'t enter more than 24 hours in a day').route(handleHourInput, state)
+            msg.say('You can\'t enter more than 24 hours in a day').route(handleHourInput, state, 60)
             return
         }
 
@@ -174,7 +182,7 @@ module.exports = (app) => {
                         attachments: splitProjectbuttons(projectButtons)
 
                         })
-                    .route(handleSelectProject, state)
+                    .route(handleSelectProject, state, 60)
 
             })
             .catch((err) => {
@@ -187,14 +195,14 @@ module.exports = (app) => {
     slapp.message('tell me a story', ['direct_message'], (msg, text) => {
         msg.say(randomStory())
     })
-    slapp.message('^(hi|hello|hey)$', ['direct_message'], (msg, text) => {
+    slapp.message('^(hi|hello|hey|yo|halo|greetings)$', ['direct_message'], (msg, text) => {
         msg.say(returnRandomGreetingString())
     })
     slapp.message('How are you?', ['direct_message'], (msg, text) => {
         msg.say("I'm great but I'm not here to talk about myself, type `help` to see how I can help you log hours.")
     })
     slapp.message('help', ['direct_message'], (msg, text) => {
-        msg.say('I can help you log hours on harvest, type `log` to start logging your hours.')
+        msg.say('Right now, I can help you log hours in harvest. Type `log` to start logging your hours.')
     })
     slapp.message('fuck', ['direct_message'], (msg, text) => {
         msg.say("Please keep profanity to a minimum!")
@@ -209,13 +217,13 @@ module.exports = (app) => {
 
 function returnRandomGreetingString() {
     if (Math.random() < 1.0) {
-        return (["Hello", "Hey :pineappletime:", "Hey.", "Hello I'm Harvest Bot, type `help` to see how I can help you.", "Greetings human. :spock-hand:" ])
+        return (["Hello", "Hey :pineappletime:", "Hey.", "yo", "Hello I'm Harvest Bot, type `help` to see how I can help you.", "Greetings human. :spock-hand:" ])
     }
 }
 
 function returnRandomString() {
     if (Math.random() < 1.0) {
-        return ([":eyeroll:", "Hey :pineappletime:", "Fascinating.", " I'm Harvest Bot, type `help` to see how I can help you.", "..." ])
+        return (["¯\\_(ツ)_/¯ \nType `help` to see how I can help you.", "Hey! :pineappletime:\nType `help` to see how I can help you.", "Totally. Type `help` to see how I can help you.", " I'm Harvest Bot, type `help` to see how I can help you.", ":thinking_face: Type `help` to see how I can help you." ])
     }
 }
 
@@ -370,6 +378,26 @@ function splitTaskButtons(tasks) {
         attachments.push(action);
 
     }
+    return attachments
+}
+
+function  cancelButton() {
+    const attachments = [];
+    const action = {};
+    const cancelButton = {
+        name: 'cancel',
+        text: 'Cancel',
+        type: 'button',
+        value: 'cancel',
+        style: 'danger',
+    }
+
+    action.text = '';
+    action.callback_id = 'select_task';
+    action.color = '#2e6be3'
+
+    action.actions = [cancelButton];
+    attachments.push(action);
     return attachments
 }
 
