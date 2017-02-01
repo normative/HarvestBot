@@ -8,6 +8,7 @@ const baseRequest = require('request')
 const _ = require('lodash')
 const Moment = require('moment')
 
+
 const harvestAPI = baseRequest.defaults({
     headers: {
         'Accept': 'application/json',
@@ -227,6 +228,77 @@ function returnRandomString() {
     if (Math.random() < 1.0) {
         return (["¯\\_(ツ)_/¯ \nType `help` to see how I can help you.", "Hey! :pineappletime:\nType `help` to see how I can help you.", "Totally. Type `help` to see how I can help you.", " I'm Harvest Bot, type `help` to see how I can help you.", ":thinking_face: Type `help` to see how I can help you." ])
     }
+}
+
+function getDayOfTheWeek() {
+    return Moment().isoWeekday()
+}
+
+function getDaysOfTheWeekAray() {
+    var daysOfTheWeek = []
+    switch (getDayOfTheWeek()) {
+        case 1:
+            break
+        case 2:
+            daysOfTheWeek = ['Monday','Today'];
+        case 3:
+            daysOfTheWeek = ['Monday', 'Tuesday', 'Today']
+        case 4:
+            daysOfTheWeek = ['Monday', 'Tuesday', 'Wednesday', 'Today']
+        case 5:
+            daysOfTheWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Today']
+        case 6:
+            daysOfTheWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday','Saturday']
+        case 7:
+            daysOfTheWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday','Saturday', 'Today']
+        default:
+            break
+    }
+    return daysOfTheWeek
+}
+
+function getButtonsForDaysOfTheWeek() {
+
+    var daysOfTheWeek = getDaysOfTheWeekAray()
+
+    const splitButtons = [];
+    let j = 0;
+    let newButtonGroup = [];
+    for (let i = 0; i < daysOfTheWeek.length; i++) {
+        newButtonGroup.push(daysOfTheWeek[i])
+        if ( (j===3) || (i === daysOfTheWeek.length-1)) {
+            splitButtons.push(newButtonGroup);
+            newButtonGroup = [];
+            j = 0;
+        }
+        j++;
+    }
+    const attachments = []
+    for (let i = 0; i < splitButtons.length; i++) {
+        const action = {};
+        const daysButton = {
+            name: 'cancel',
+            text: 'Cancel',
+            type: 'button',
+            value: 'cancel',
+            style: 'danger',
+        }
+        let buttons = splitButtons[i];
+        if (i === splitButtons.length - 1) {
+            buttons.push(daysButton);
+        }
+        action.text = '';
+        action.callback_id = 'select_task';
+        action.color = '#2e6be3'
+        if (i === 0 ) {
+            action.text = '';
+        }
+        action.actions = buttons;
+        console.log(action.actions)
+        attachments.push(action);
+
+    }
+    return attachments
 }
 
 function randomStory() {
