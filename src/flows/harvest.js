@@ -120,9 +120,9 @@ module.exports = (app) => {
 
         msg.respond({
             text: `For project *\"${selectedProject.name}\"*, which task are you logging hours for?`,
-            attachments: splitTaskButtons(taskButtons)})
+            attachments: splitTaskButtons(taskButtons)}).route(handleSelectTask, enrichedState, 60)
 
-    }).route(handleSelectTask, enrichedState, 60)
+    })
 
     slapp.route(handleSelectTask, (msg, state) => {
         const selectedProject = state.selectedProject
