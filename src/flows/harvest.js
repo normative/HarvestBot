@@ -117,7 +117,6 @@ module.exports = (app) => {
         const enrichedState = Object.assign({},
             state,
             { projects, selectedProject, selectedProjectId, tasks })
-        console.log(msg.respond().route)
         msg.say({
             text: `For project *\"${selectedProject.name}\"*, which task are you logging hours for?`,
             attachments: splitTaskButtons(taskButtons)}).route(handleSelectTask, enrichedState, 60)
